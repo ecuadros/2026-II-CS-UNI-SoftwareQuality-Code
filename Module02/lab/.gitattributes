@@ -1,0 +1,4 @@
+# Los scripts de shell deben conservar saltos de linea LF aunque se clonen en Windows;
+# con CRLF, bash falla con errores como "$'\r': command not found".
+*.sh text eol=lf
+hooks/* text eol=lf
