@@ -23,8 +23,10 @@
     <packaging>pom</packaging>
     <description>Chasis compartido por los servicios de riesgo-quebrada.</description>
 
+    <!-- riesgo antes que ingesta: el consumidor escribe el contrato y el proveedor lo verifica. -->
     <modules>
         <module>riesgo</module>
+        <module>ingesta</module>
     </modules>
 
     <properties>
