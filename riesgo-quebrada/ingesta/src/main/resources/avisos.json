@@ -1,0 +1,12 @@
+[
+  {
+    "codigo": "403-2026",
+    "inicio": "2026-10-09T05:00:38Z",
+    "fin": "2026-10-12T04:59:38Z",
+    "distritos": [
+      {"ubigeo": "060101", "nivel": "ALTO"},
+      {"ubigeo": "060102", "nivel": "MUY_ALTO"},
+      {"ubigeo": "140205", "nivel": "MEDIO"}
+    ]
+  }
+]
