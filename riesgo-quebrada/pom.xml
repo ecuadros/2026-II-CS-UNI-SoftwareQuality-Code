@@ -23,10 +23,12 @@
     <packaging>pom</packaging>
     <description>Chasis compartido por los servicios de riesgo-quebrada.</description>
 
-    <!-- riesgo antes que ingesta: el consumidor escribe el contrato y el proveedor lo verifica. -->
+    <!-- riesgo antes que ingesta: el consumidor escribe el contrato y el proveedor lo verifica.
+         e2e al final: necesita los .jar de los dos servicios. -->
     <modules>
         <module>riesgo</module>
         <module>ingesta</module>
+        <module>e2e</module>
     </modules>
 
     <properties>
