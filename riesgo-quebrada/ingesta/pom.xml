@@ -32,6 +32,23 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+            <plugin>
+                <groupId>au.com.dius.pact.provider</groupId>
+                <artifactId>maven</artifactId>
+                <version>${pact.version}</version>
+                <configuration>
+                    <serviceProviders>
+                        <serviceProvider>
+                            <name>ingesta-service</name>
+                            <protocol>http</protocol>
+                            <host>localhost</host>
+                            <port>8081</port>
+                            <pactFileDirectory>${project.basedir}/../pacts</pactFileDirectory>
+                        </serviceProvider>
+                    </serviceProviders>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
