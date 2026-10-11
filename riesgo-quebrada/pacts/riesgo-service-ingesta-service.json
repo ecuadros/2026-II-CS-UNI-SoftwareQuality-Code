@@ -1,0 +1,131 @@
+{
+  "consumer": {
+    "name": "riesgo-service"
+  },
+  "interactions": [
+    {
+      "description": "una consulta de los avisos del distrito 060101",
+      "providerStates": [
+        {
+          "name": "hay un aviso vigente para el distrito 060101"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/avisos",
+        "query": {
+          "ubigeo": [
+            "060101"
+          ]
+        }
+      },
+      "response": {
+        "body": [
+          {
+            "codigo": "403-2026",
+            "distritos": [
+              {
+                "nivel": "ALTO",
+                "ubigeo": "060101"
+              }
+            ],
+            "fin": "2026-10-12T04:59:38Z",
+            "inicio": "2026-10-09T05:00:38Z"
+          }
+        ],
+        "headers": {
+          "Content-Type": "application/json; charset=UTF-8"
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$[*].codigo": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$[*].distritos": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$[*].distritos[*].nivel": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "BAJO|MEDIO|ALTO|MUY_ALTO"
+                }
+              ]
+            },
+            "$[*].distritos[*].ubigeo": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "\\d{6}"
+                }
+              ]
+            },
+            "$[*].fin": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z"
+                }
+              ]
+            },
+            "$[*].inicio": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z"
+                }
+              ]
+            }
+          },
+          "header": {
+            "Content-Type": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "application/json(;\\s?charset=[\\w\\-]+)?"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pact-jvm": {
+      "version": "4.6.21"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "ingesta-service"
+  }
+}
