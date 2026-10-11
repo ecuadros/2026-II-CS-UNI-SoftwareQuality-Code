@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: riesgo
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/riesgo
+server:
+  port: 8082
+ingesta:
+  url: http://localhost:8081
