@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: ingesta
+server:
+  port: 8081

@@ -1,6 +1,17 @@
 # Prerequisites
 *.d
 
+#Project
+target/
+*.iml
+.idea/
+.vscode/
+
+.project
+.classpath
+.settings/
+.factorypath
+
 # Compiled Object files
 *.slo
 *.lo
