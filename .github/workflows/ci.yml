@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Tipos, lint, pruebas y build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_TELEMETRY_DISABLED: 1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Configurar pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 12.14.0
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      - name: Verificar tipos
+        run: pnpm exec tsc --noEmit
+
+      - name: Análisis estático (ESLint)
+        run: pnpm lint
+
+      - name: Ejecutar pruebas y verificar cobertura
+        run: pnpm test:coverage
+
+      - name: Compilar
+        run: pnpm run build
+
+      - name: Validar artefactos del build
+        run: |
+          test -s .next/BUILD_ID || { echo "::error::Falta .next/BUILD_ID"; exit 1; }
+          test -s .next/server/app/index.html || { echo "::error::La página / no fue prerenderizada"; exit 1; }
+          echo "BUILD_ID: $(cat .next/BUILD_ID)"
+
+      - name: Prueba de humo del servidor de producción
+        run: |
+          pnpm start --port 3000 > server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+
+          for i in $(seq 1 30); do
+            if curl -sf -o page.html http://localhost:3000/; then break; fi
+            sleep 1
+          done
+
+          if [ ! -s page.html ]; then
+            echo "::error::El servidor no respondió con HTTP 2xx en /"
+            cat server.log
+            exit 1
+          fi
+          grep -q "<title>ResilientOps" page.html || { echo "::error::La respuesta de / no contiene el título esperado"; exit 1; }
+          echo "GET / respondió correctamente con el título de ResilientOps"
